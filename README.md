@@ -6,7 +6,7 @@ A small Task Manager REST API with an in-memory store. Data resets whenever the 
 
 ## Tech Stack
 
-- Node.js, Express 5
+- Node.js (18+), Express 5
 - Jest + Supertest (tests)
 - In-memory `Map` store, UUIDs via Node's built-in `crypto.randomUUID`
 
@@ -47,9 +47,12 @@ npm run coverage
 | GET | `/tasks/stats` | Counts by status plus `overdue` |
 
 List response shape: `{ "tasks": [], "page": 1, "limit": 10, "total": 0, "totalPages": 0 }`.
+
 Errors are always `{ "error": "message" }` with 400 (validation), 404 (not found) or 500 (unexpected; no stack trace exposed).
 
 ## Example Requests
+
+macOS / Linux (curl):
 
 ```bash
 curl -X POST localhost:3000/tasks -H 'Content-Type: application/json' \
@@ -64,6 +67,14 @@ curl -X PATCH localhost:3000/tasks/<id>/complete
 curl -X PATCH localhost:3000/tasks/<id>/assign -H 'Content-Type: application/json' -d '{"assignee":"Harsh"}'
 
 curl localhost:3000/tasks/stats
+```
+
+Windows (PowerShell):
+
+```powershell
+$t = Invoke-RestMethod -Method Post -Uri http://localhost:3000/tasks -ContentType "application/json" -Body '{"title":"Learn Node.js"}'
+Invoke-RestMethod -Method Patch -Uri "http://localhost:3000/tasks/$($t.id)/assign" -ContentType "application/json" -Body '{"assignee":"Harsh"}'
+Invoke-RestMethod http://localhost:3000/tasks/stats
 ```
 
 ## Validation
